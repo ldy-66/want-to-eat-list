@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f4f3ed" />
+    <meta name="description" content="把想吃的餐厅和菜品记下来，安排日期与优先级。" />
+    <title>想吃清单 · 留给下一顿</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="想吃清单首页">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <circle cx="16" cy="16" r="10.25" stroke="currentColor" stroke-width="2.2" />
+              <circle cx="16" cy="16" r="5.1" stroke="currentColor" stroke-width="1.7" />
+              <path d="M24.1 8.2 26 6.3M21.9 6.2l1.8-1.8M26.2 10.4l1.8-1.8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span>想吃清单<span class="brand-period">.</span></span>
+        </a>
+        <div class="local-note" title="你的清单只保存在当前设备的浏览器中">
+          <span class="local-dot" aria-hidden="true"></span>
+          <span>仅保存在此浏览器</span>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <span class="eyebrow"><span class="eyebrow-line"></span>给每一顿一点期待</span>
+            <h1 id="hero-title">下一顿，<br />就吃喜欢的<span class="hero-period">。</span></h1>
+            <p>把想吃的菜和想去的店先记下来，<br class="desktop-break" />再挑个合适的日子出发。</p>
+            <button class="button button-light" id="add-first-button" type="button">
+              <span aria-hidden="true">＋</span> 记下一件想吃的
+            </button>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <div class="art-sun"></div>
+            <div class="art-orbit orbit-one"></div>
+            <div class="art-orbit orbit-two"></div>
+            <div class="art-plate"><span>好好<br />吃饭</span></div>
+            <div class="art-leaf leaf-one">✳</div>
+            <div class="art-leaf leaf-two">✳</div>
+            <div class="art-caption"><span>一口一口</span><span>都是期待</span></div>
+          </div>
+          <div class="hero-index" aria-hidden="true">01 <span>—</span> 03</div>
+        </section>
+
+        <section class="overview" aria-label="清单概览">
+          <div class="overview-intro">
+            <span class="eyebrow eyebrow-dark">YOUR LITTLE FOOD LIST</span>
+            <h2>先记下来，<span>总会吃到。</span></h2>
+          </div>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="stat-value" id="stat-pending">0</span>
+              <span class="stat-label">还没去</span>
+            </div>
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-item">
+              <span class="stat-value" id="stat-week">0</span>
+              <span class="stat-label">本周计划</span>
+            </div>
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-item">
+              <span class="stat-value" id="stat-eaten">0</span>
+              <span class="stat-label">已经吃到</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="list-section" aria-labelledby="list-title">
+          <div class="list-heading">
+            <div>
+              <span class="eyebrow eyebrow-dark">YOUR NEXT BITE</span>
+              <h2 id="list-title">我的想吃清单<span class="heading-count" id="heading-count">0</span></h2>
+            </div>
+            <div class="list-tools">
+              <button class="text-button" id="import-button" type="button">导入备份</button>
+              <button class="text-button" id="export-button" type="button">导出备份</button>
+              <input id="import-file" type="file" accept="application/json,.json" hidden />
+              <button class="button button-dark add-button" id="add-button" type="button"><span aria-hidden="true">＋</span> 添加</button>
+            </div>
+          </div>
+
+          <div class="list-controls">
+            <div class="tabs" role="tablist" aria-label="筛选清单">
+              <button class="tab is-active" type="button" role="tab" aria-selected="true" data-filter="all">全部 <span id="count-all">0</span></button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-filter="pending">还没去 <span id="count-pending">0</span></button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-filter="eaten">吃过啦 <span id="count-eaten">0</span></button>
+            </div>
+            <div class="control-actions">
+              <label class="search-box">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.7" cy="8.7" r="5.7" /><path d="m13 13 4 4" /></svg>
+                <input id="search-input" type="search" placeholder="搜菜名或店名" aria-label="搜索菜名或店名" />
+              </label>
+              <label class="sort-select">
+                <span class="sr-only">排序方式</span>
+                <select id="sort-select" aria-label="排序方式">
+                  <option value="priority">按优先级</option>
+                  <option value="date">按计划日期</option>
+                  <option value="recent">按添加时间</option>
+                </select>
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m4 6 4 4 4-4" /></svg>
+              </label>
+            </div>
+          </div>
+
+          <div class="entries-grid" id="entries-grid" aria-live="polite"></div>
+          <div class="empty-state" id="empty-state" hidden>
+            <div class="empty-illustration" aria-hidden="true"><span>✳</span><div></div></div>
+            <h3 id="empty-title">清单还空着呢</h3>
+            <p id="empty-copy">想到什么好吃的，就把它记下来吧。</p>
+            <button class="button button-dark" id="empty-add-button" type="button">记下第一件想吃的 <span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>慢慢挑，好好吃。</span>
+        <span>MADE FOR YOUR NEXT BITE <span class="footer-spark">✳</span></span>
+      </footer>
+    </div>
+
+    <dialog class="entry-dialog" id="entry-dialog" aria-labelledby="dialog-title">
+      <form id="entry-form" method="dialog">
+        <div class="dialog-topline">
+          <span class="eyebrow eyebrow-dark" id="dialog-eyebrow">A LITTLE NOTE TO YOURSELF</span>
+          <button class="icon-button close-dialog" type="button" aria-label="关闭">×</button>
+        </div>
+        <h2 id="dialog-title">记下一件想吃的</h2>
+        <p class="dialog-subtitle">留住这个念头，下次就有好去处。</p>
+
+        <label class="field-label" for="entry-name">想吃什么 <span class="required-mark">*</span></label>
+        <input class="field-input" id="entry-name" name="name" maxlength="80" placeholder="比如：炙烤鳗鱼饭" required />
+
+        <label class="field-label" for="entry-venue">餐厅 / 地点</label>
+        <input class="field-input" id="entry-venue" name="venue" maxlength="100" placeholder="店名或大概位置" />
+
+        <div class="field-row">
+          <div>
+            <label class="field-label" for="entry-date">计划日期</label>
+            <input class="field-input" id="entry-date" name="date" type="date" />
+          </div>
+          <div>
+            <label class="field-label" for="entry-priority">优先级</label>
+            <select class="field-input" id="entry-priority" name="priority">
+              <option value="high">很想吃</option>
+              <option value="medium" selected>想吃</option>
+              <option value="low">有空再去</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="field-label" for="entry-note">备注 <span class="optional-label">选填</span></label>
+        <textarea class="field-input field-textarea" id="entry-note" name="note" maxlength="280" rows="3" placeholder="口味、推荐人的名字，或任何小提醒"></textarea>
+
+        <div class="dialog-actions">
+          <button class="button button-quiet close-dialog" type="button">取消</button>
+          <button class="button button-dark" id="save-button" type="submit">存进清单 <span aria-hidden="true">→</span></button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
